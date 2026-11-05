@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ko-KR
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "{contracts,decisions}.md"
+      instructions: |
+        팀 기준 문서 변경이다. 아래만 리뷰한다.
+        1. 다른 C-·D- 블록과 모순되는지. 근거는 ID로 인용한다.
+        2. 바뀐 규칙·결정을 지우지 않고 status: superseded와 by로 남겼는지.
+        3. 이 변경 때문에 고쳐야 할 코드 repo와 경로. 관련 블록의 scope를 보고
+           cloud4-final/hybrid-5th, jammy-collector, jammy-observability 중에서 적는다.
+        4. IP가 앞 두 자리만 남기고 가려졌는지, 비밀값이 없는지.

@@ -16,19 +16,39 @@
 
 ## 작성 규칙
 
-- 결정은 `decisions.md`의 해당 파트 섹션 맨 위에 한 줄로 추가한다.
-  형식: `- **YYYY-MM-DD · 결정** — 이유. (영향: 파트) [출처]`
-- 바뀐 결정은 지우지 않는다. `~~기존 결정~~ → YYYY-MM-DD 결정으로 대체`로 표시한다.
-  AI는 raw 파일만 읽고 Git 이력을 보지 않으므로, 예전 결정이 다시 쓰이지 않게 파일 안에 남긴다.
-- IP 주소는 앞 두 자리만 쓰고 뒤 두 자리는 `x`로 가린다(`10.10.x.x`, `54.116.x.x`). 역할 끝자리처럼 규칙인 부분만 `10.10.x.110`으로 둔다. 예외는 표준 대역·공용 주소(`100.64.0.0/10`, `1.1.1.1`)다. 정확한 값은 Confluence(내부)에 둔다. CI가 가리지 않은 IP를 검사한다.
+두 파일은 리뷰 AI가 계속 읽는 문서다. 규칙 1개를 블록 1개로 쓰고, `docs-check`가 형식을 검사한다.
+
+- `contracts.md` 블록: `### C-<분류>-<번호> · 제목` (예: `C-NET-001`)
+  - `status: active` 필드: `rule`(MUST / MUST NOT / SHOULD 문장), `scope`(repo·경로), `violation`(위반 예시), `source`
+  - `status: open`(아직 정하지 않음) 필드: `rule`(정할 것), `owner`
+- `decisions.md` 블록: `### D-<YYYYMMDD>-<번호> · 제목` (예: `D-20261104-01`)
+  - 필드: `decision`, `implies`(이 결정 때문에 코드가 지켜야 할 것), `why`(한 줄), `scope`, `status`, `source`
+- 바뀐 규칙이나 결정은 지우지 않는다. `status: superseded`와 `by: <새 ID>`를 붙이고 새 블록을 추가한다. AI는 Git 이력을 보지 않으므로 파일 안에 남긴다.
+- ID는 한 번 쓰면 바꾸거나 재사용하지 않는다. 다른 블록을 가리킬 때는 ID로 쓴다.
+- IP 주소는 앞 두 자리만 쓰고 뒤를 `x`로 가린다(`10.10.x.x`, 역할 끝자리는 `10.10.x.110`). 예외는 표준 값(`100.64.0.0/10`, `1.1.1.1`)이다. 정확한 값은 Confluence(내부)에 둔다.
 - 비밀번호, 키, 계정 비밀값은 적지 않는다.
-- 아직 정하지 않은 값은 `> 결정 필요(구현 전): …`로 표시한다. 그 값에 의존하는 구현은 결정 뒤에 한다.
 - 파트 내부의 세부 설계, 작업 기록, 일지는 여기에 두지 않는다.
 
 ## 읽는 곳
 
 - GitHub: 이 repo의 main
 - Confluence: `0. 공통 기준` (평일 09·13·18시 자동 갱신, 직접 수정 금지. 1차 구축 중)
-- AI: 각 코드 repo의 `AGENTS.md`가 아래 raw URL을 읽게 한다.
+- AI: 평소에는 읽지 않는다. 다른 파트와 함께 쓰는 값을 다루거나 내용이 서로 맞지 않을 때만, 각 코드 repo의 `AGENTS.md`에 따라 아래 raw URL에서 관련 분류만 읽는다.
   - `https://raw.githubusercontent.com/cloud4-final/hybrid-docs/main/contracts.md`
   - `https://raw.githubusercontent.com/cloud4-final/hybrid-docs/main/decisions.md`
+- 리뷰 AI(CodeRabbit): 코드 PR마다 이 repo main을 읽고 아래 `PR 리뷰 기준`으로 리뷰한다.
+
+## PR 리뷰 기준
+
+코드 PR 리뷰는 아래 5가지만 본다. 스타일과 취향은 지적하지 않는다. 각 코드 repo의 `.coderabbit.yaml`이 이 목록을 그대로 쓰므로, 바꿀 때 함께 고친다.
+
+1. 팀 약속 위반: 버전, 포트, 주소, 이름, API, DB, label, 태그, 방향성 결정이 `contracts.md`·`decisions.md`와 다른가
+2. merge 후 장애: merge 후 배포, 실행, 마이그레이션, 설정이 실패하거나 서비스가 멈추는가
+3. 코드 결함: 버그, 보안 문제, 예외 처리 누락, 테스트 누락이 있는가
+4. 함께 쓸 때 문제: 다른 repo나 파트가 이 코드(API, 이미지, env, metric, 설정)를 쓸 때 깨지는가
+5. 다른 파트 영향: 이 변경 때문에 다른 repo나 경로도 고쳐야 하는가
+
+판단 규칙:
+- 근거는 규칙 ID(`C-`), 결정 ID(`D-`), 또는 파일과 줄로 인용한다.
+- `status: active`만 위반으로 본다. `superseded` 규칙을 따르는 코드는 legacy로 지적하고 `by`의 ID를 안내한다. `open` 규칙에 의존하는 코드는 "결정 필요"로 표시한다.
+- 기준과 다르지만 의도한 변경이면 코드를 되돌리지 않는다. 이 repo에 PR을 올려 merge하고 코드 PR 본문에 링크한다.
