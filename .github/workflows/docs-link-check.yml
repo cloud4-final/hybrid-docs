@@ -1,0 +1,22 @@
+# 코드 repo가 호출하는 공통 check: PR 본문에 링크한 hybrid-docs PR이 merge됐는지 확인한다.
+name: docs-link-check
+on:
+  workflow_call:
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          repository: cloud4-final/hybrid-docs
+          path: _hd
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python _hd/.github/scripts/docs_link.py
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          GH_TOKEN: ${{ github.token }}
