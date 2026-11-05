@@ -23,6 +23,6 @@ jobs:
           CONFLUENCE_USER_NAME: ${{ secrets.CONFLUENCE_USER_NAME }}
           CONFLUENCE_API_KEY: ${{ secrets.CONFLUENCE_API_KEY }}
         run: >
-          python -m md2conf contracts.md decisions.md
+          python -m md2conf README.md contracts.md decisions.md
           --root-page 17334273 --skip-update --no-force-valid-url
           --generated-by "GitHub cloud4-final/hybrid-docs에서 자동 생성 · 직접 수정 금지 (평일 09·13·18시 갱신)"

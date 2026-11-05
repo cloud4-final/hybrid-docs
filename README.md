@@ -1,11 +1,12 @@
-# hybrid-docs
+<!-- confluence-page-id: 17334273 -->
+# 0. 공통 기준
 
-3거점 하이브리드 프로젝트의 팀 공통 기준이다. 사람과 AI 모두 이 repo의 main을 기준으로 작업한다.
+GitHub `cloud4-final/hybrid-docs`는 3거점 하이브리드 프로젝트의 팀 공통 기준이다. 사람과 AI 모두 이 repo의 main을 기준으로 작업한다.
 
 | 파일 | 내용 |
 |---|---|
-| [contracts.md](contracts.md) | 파트 간 통일값: 대역, 주소, 포트, 이름, API, DB, 관측 label, AWS 태그 |
-| [decisions.md](decisions.md) | 팀이 승인한 결정 |
+| [contracts.md](https://github.com/cloud4-final/hybrid-docs/blob/main/contracts.md) | 파트 간 통일값: 대역, 주소, 포트, 이름, API, DB, 관측 label, AWS 태그 |
+| [decisions.md](https://github.com/cloud4-final/hybrid-docs/blob/main/decisions.md) | 팀이 승인한 결정 |
 
 ## 바꾸는 방법
 
