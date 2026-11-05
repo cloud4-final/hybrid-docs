@@ -14,4 +14,4 @@ jobs:
           python-version: "3.12"
       - run: pip install pytest==9.2.0
       - run: python -m pytest .github/scripts/tests -q
-      - run: python .github/scripts/check_docs.py contracts.md decisions.md README.md
+      - run: python .github/scripts/check_docs.py contracts.md decisions.md --require-page-id && python .github/scripts/check_docs.py README.md
