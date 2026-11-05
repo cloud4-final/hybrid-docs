@@ -43,3 +43,72 @@ def test_main_reports_unmasked_ip(tmp_path, capsys):
 def test_main_ok(tmp_path):
     path = write(tmp_path, "decisions.md", "주소 10.10.x.110\n")
     assert check_docs.main([str(path)]) == 0
+
+
+GOOD_C = """# T
+### C-NET-001 · 대역
+- rule: x
+- scope: y
+- violation: z
+- status: active
+- source: s
+
+### C-NET-002 · 미정
+- rule: x
+- status: open
+- owner: a
+"""
+
+GOOD_D = """# T
+### D-20261104-01 · 결정
+- decision: x
+- implies: C-NET-001
+- why: y
+- scope: z
+- status: active (적용 완료)
+- source: s
+"""
+
+
+def test_blocks_valid(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C)
+    d = write(tmp_path, "decisions.md", GOOD_D)
+    assert check_docs.check_blocks([c, d]) == []
+
+
+def test_missing_required_field(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C.replace("- violation: z\n", ""))
+    errors = check_docs.check_blocks([c])
+    assert any("C-NET-001" in e and "violation" in e for e in errors)
+
+
+def test_open_requires_owner(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C.replace("- owner: a\n", ""))
+    assert any("C-NET-002" in e and "owner" in e for e in check_docs.check_blocks([c]))
+
+
+def test_invalid_status(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C.replace("status: active", "status: done"))
+    assert any("status" in e for e in check_docs.check_blocks([c]))
+
+
+def test_superseded_requires_by(tmp_path):
+    d = write(tmp_path, "decisions.md", GOOD_D.replace("status: active (적용 완료)", "status: superseded"))
+    c = write(tmp_path, "contracts.md", GOOD_C)
+    assert any("by" in e for e in check_docs.check_blocks([c, d]))
+
+
+def test_duplicate_id(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C.replace("C-NET-002", "C-NET-001"))
+    assert any("중복" in e for e in check_docs.check_blocks([c]))
+
+
+def test_dangling_reference(tmp_path):
+    d = write(tmp_path, "decisions.md", GOOD_D.replace("implies: C-NET-001", "implies: C-NET-009"))
+    c = write(tmp_path, "contracts.md", GOOD_C)
+    assert any("C-NET-009" in e for e in check_docs.check_blocks([c, d]))
+
+
+def test_bad_id_format(tmp_path):
+    c = write(tmp_path, "contracts.md", GOOD_C.replace("C-NET-001", "C-net-1"))
+    assert any("ID 형식" in e for e in check_docs.check_blocks([c]))
