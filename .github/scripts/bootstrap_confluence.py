@@ -20,6 +20,8 @@ PARENT_TITLE = "0. 공통 기준"
 CHILDREN = [
     ("contracts.md", "공통 기준 · 파트 간 계약"),
     ("decisions.md", "공통 기준 · 결정 기록"),
+    ("architecture.md", "공통 기준 · 아키텍처"),
+    ("mvp-roles.md", "공통 기준 · MVP·역할"),
 ]
 PARENT_BODY = (
     "<p>팀 공통 기준의 읽기용 사본이다. 원본은 "

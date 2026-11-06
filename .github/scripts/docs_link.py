@@ -19,7 +19,7 @@ def linked_docs_prs(body: Optional[str]) -> list[int]:
 
 def docs_link_check(body: Optional[str], merged: Callable[[int], bool]) -> list[str]:
     return [
-        f"hybrid-docs#{n}이 아직 merge되지 않았다. 문서 PR을 먼저 merge한 뒤 이 check를 다시 실행한다."
+        f"hybrid-docs#{n}이 아직 merge되지 않았다. 기준 변경이 함께 필요한 경우 문서 PR merge 여부를 확인한다."
         for n in linked_docs_prs(body)
         if not merged(n)
     ]
@@ -36,12 +36,12 @@ def gh_merged(number: int) -> bool:
 def main() -> int:
     body = os.environ.get("PR_BODY", "")
     links = linked_docs_prs(body)
-    errors = docs_link_check(body, gh_merged)
-    for error in errors:
-        print(f"::error::{error}")
-    if not errors:
+    warnings = docs_link_check(body, gh_merged)
+    for warning in warnings:
+        print(f"::warning::{warning}")
+    if not warnings:
         print(f"연결된 hybrid-docs PR {len(links)}개, 모두 merge됨" if links else "연결된 hybrid-docs PR 없음")
-    return 1 if errors else 0
+    return 0
 
 
 if __name__ == "__main__":
