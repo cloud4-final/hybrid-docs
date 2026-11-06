@@ -25,13 +25,15 @@ def check_doc(path: Path, require_page_id: bool) -> list[str]:
 
 
 HEADING = re.compile(r"^### (\S+) · ", re.M)
-ID_FORMAT = re.compile(r"^(C-[A-Z]+-\d{3}|D-\d{8}-\d{2})$")
-ID_REF = re.compile(r"\b(?:C-[A-Z]+-\d{3}|D-\d{8}-\d{2})\b")
+ID_FORMAT = re.compile(r"^([CAM]-[A-Z]+-\d{3}|D-\d{8}-\d{2})$")
+ID_REF = re.compile(r"\b(?:[CAM]-[A-Z]+-\d{3}|D-\d{8}-\d{2})\b")
 FIELD = re.compile(r"^- ([a-z_]+):", re.M)
 STATUSES = ("active", "open", "superseded")
 REQUIRED = {
     "C": {"active": ["rule", "scope", "violation", "source"], "open": ["rule", "owner"], "superseded": ["rule", "by"]},
     "D": {"active": ["decision", "implies", "why", "scope", "source"], "superseded": ["decision", "by"]},
+    "A": {"active": ["rule", "scope", "violation", "source"], "superseded": ["rule", "by"]},
+    "M": {"active": ["rule", "owner", "scope", "source"], "open": ["rule", "owner"], "superseded": ["rule", "by"]},
 }
 
 

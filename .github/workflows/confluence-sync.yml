@@ -1,8 +1,17 @@
-# GitHub -> Confluence 단방향 동기화. Confluence의 수동 수정은 덮어쓴다.
+# GitHub -> Confluence 단방향 동기화 및 연결된 기존 Confluence 문서 AI 최신화
 name: confluence-sync
 on:
   schedule:
     - cron: "0 0,4,9 * * 1-5"   # 평일 KST 09·13·18시
+  push:
+    branches:
+      - main
+    paths:
+      - "README.md"
+      - "contracts.md"
+      - "decisions.md"
+      - "architecture.md"
+      - "mvp-roles.md"
   workflow_dispatch:
 concurrency: confluence-sync
 permissions:
@@ -16,13 +25,22 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install markdown-to-confluence==0.6.5
-      - name: publish
+      - name: publish-common-baseline
         env:
           CONFLUENCE_DOMAIN: teamjammyjammy.atlassian.net
           CONFLUENCE_SPACE_KEY: MFS
           CONFLUENCE_USER_NAME: ${{ secrets.CONFLUENCE_USER_NAME }}
           CONFLUENCE_API_KEY: ${{ secrets.CONFLUENCE_API_KEY }}
         run: >
-          python -m md2conf README.md contracts.md decisions.md
+          python -m md2conf README.md contracts.md decisions.md architecture.md mvp-roles.md
           --root-page 17334273 --skip-update --no-force-valid-url
-          --generated-by "GitHub cloud4-final/hybrid-docs에서 자동 생성 · 직접 수정 금지 (평일 09·13·18시 갱신)"
+          --generated-by "GitHub cloud4-final/hybrid-docs에서 자동 생성 · 직접 수정 금지 (평일 09·13·18시 및 merge 시 갱신)"
+      - name: ai-patch-linked-confluence-pages
+        env:
+          CONFLUENCE_DOMAIN: teamjammyjammy.atlassian.net
+          CONFLUENCE_USER_NAME: ${{ secrets.CONFLUENCE_USER_NAME }}
+          CONFLUENCE_API_KEY: ${{ secrets.CONFLUENCE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python .github/scripts/ai_patch_confluence.py --apply
