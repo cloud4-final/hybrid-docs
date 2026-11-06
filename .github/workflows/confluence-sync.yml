@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 concurrency: confluence-sync
 permissions:
-  contents: read
+  contents: write
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -25,6 +25,20 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install markdown-to-confluence==0.6.5
+      - name: auto-compact-if-over-160-lines
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python .github/scripts/compact_docs.py contracts.md decisions.md architecture.md mvp-roles.md --max-lines 160
+          if [ -n "$(git status --porcelain contracts.md decisions.md architecture.md mvp-roles.md)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add contracts.md decisions.md architecture.md mvp-roles.md
+            git commit -m "chore(docs): 160줄 초과 문서 중요 내용 위주 자동 압축"
+            git push origin HEAD:main
+          fi
       - name: publish-common-baseline
         env:
           CONFLUENCE_DOMAIN: teamjammyjammy.atlassian.net
