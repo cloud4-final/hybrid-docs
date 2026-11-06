@@ -15,5 +15,5 @@ jobs:
       - run: pip install pytest==9.2.0
       - run: python -m pytest .github/scripts/tests -q
       - run: >
-          python .github/scripts/check_docs.py contracts.md decisions.md architecture.md mvp-roles.md --require-page-id --blocks &&
-          python .github/scripts/check_docs.py README.md --require-page-id
+          python .github/scripts/check_docs.py contracts.md decisions.md architecture.md mvp-roles.md --require-page-id --blocks --max-lines 150 &&
+          python .github/scripts/check_docs.py README.md --require-page-id --max-lines 150

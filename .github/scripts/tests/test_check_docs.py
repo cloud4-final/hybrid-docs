@@ -143,3 +143,20 @@ def test_mvp_requires_owner(tmp_path):
     m = write(tmp_path, "mvp-roles.md", GOOD_M.replace("- owner: o\n", ""))
     errors = check_docs.check_blocks([m])
     assert any("M-MVP-001" in e and "owner" in e for e in errors)
+
+
+def test_max_lines_enforced(tmp_path):
+    long_doc = "\n".join(f"line {i}" for i in range(155))
+    p = write(tmp_path, "contracts.md", long_doc)
+    assert check_docs.check_doc(p, require_page_id=False, max_lines=150) != []
+    assert check_docs.check_doc(p, require_page_id=False, max_lines=200) == []
+
+
+def test_inline_pipe_separated_fields(tmp_path):
+    compact = (
+        "# T\n### C-NET-001 · 대역\n"
+        "- rule: r\n"
+        "- scope: s | violation: v | status: active | source: src\n"
+    )
+    c = write(tmp_path, "contracts.md", compact)
+    assert check_docs.check_blocks([c]) == []

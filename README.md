@@ -5,7 +5,7 @@ GitHub `cloud4-final/hybrid-docs`는 3거점 하이브리드 프로젝트의 팀
 
 | 파일 | 내용 |
 |---|---|
-| [contracts.md](https://github.com/cloud4-final/hybrid-docs/blob/main/contracts.md) | 파트 간 통일값: 대역, 주소, 포트, 이름, API, DB, 관측 label, AWS 태그 (`C-`) |
+| [contracts.md](https://github.com/cloud4-final/hybrid-docs/blob/main/contracts.md) | 파트 간 통일값: 대역, 주소, 포트, 이름, API, DB, 관측 label, AWS 태그, 최소 버전 (`C-`) |
 | [decisions.md](https://github.com/cloud4-final/hybrid-docs/blob/main/decisions.md) | 팀이 승인한 결정 (`D-`) |
 | [architecture.md](https://github.com/cloud4-final/hybrid-docs/blob/main/architecture.md) | 전체 아키텍처 경계: 토폴로지, 트래픽 흐름, 데이터·복제·백업, 배포·관측·AI (`A-`) |
 | [mvp-roles.md](https://github.com/cloud4-final/hybrid-docs/blob/main/mvp-roles.md) | MVP 필수·제외 범위와 파트별 담당 역할(Owner)·인계 경계 (`M-`) |
@@ -20,7 +20,7 @@ GitHub `cloud4-final/hybrid-docs`는 3거점 하이브리드 프로젝트의 팀
 
 ## 작성 규칙
 
-네 파일은 리뷰 AI가 계속 읽는 문서다. 규칙 1개를 블록 1개로 쓰고, `docs-check`가 형식을 검사한다.
+네 파일은 리뷰 AI가 계속 읽는 문서다. AI가 내용을 놓치지 않도록 **파일당 150줄 이하**로 유지하고, 규칙 1개를 블록 1개로 쓰며, `docs-check`가 줄 수와 형식을 검사한다. (필드는 여러 줄 또는 `|` 구분 한 줄로 쓸 수 있다.)
 
 - `contracts.md` 블록: `### C-<분류>-<번호> · 제목` (예: `C-NET-001`)
   - `status: active` 필드: `rule`(MUST / MUST NOT / SHOULD 문장), `scope`(repo·경로), `violation`(위반 예시), `source`
