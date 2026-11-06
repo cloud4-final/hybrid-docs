@@ -5,7 +5,7 @@
 
 ## 리뷰어 사용법
 - 규칙 1개가 블록 1개다. 위반을 찾으면 규칙 ID를 인용한다(`C-API-002 위반: region에 jammy-a 사용`).
-- `status: active`만 위반으로 판단한다. `status: open`은 "결정 필요(<owner>)"로 표시하고, `status: superseded`는 legacy로 지적하고 `by`의 ID를 안내한다.
+- `status: active`만 위반으로 판단한다. `status: open`은 "결정 필요(`<owner>`)"로 표시하고, `status: superseded`는 legacy로 지적하고 `by`의 ID를 안내한다.
 - IP의 `x`는 public repo라서 가린 자리다. 앞 두 자리나 역할 끝자리(`.110`, `.121`, `.130`)가 다르면 위반이다. 표준 값(`100.64.0.0/10`, `1.1.1.1`)은 가리지 않는다.
 
 ## 네트워크 대역
