@@ -21,9 +21,13 @@ def test_linked_docs_prs_handles_none_body():
     assert docs_link.linked_docs_prs(None) == []
 
 
-def test_docs_link_check_fails_on_unmerged():
-    errors = docs_link.docs_link_check(BODY, merged=lambda n: n == 12)
-    assert len(errors) == 1 and "#15" in errors[0]
+def test_docs_link_check_warns_on_unmerged(monkeypatch, capsys):
+    warnings = docs_link.docs_link_check(BODY, merged=lambda n: n == 12)
+    assert len(warnings) == 1 and "#15" in warnings[0]
+    monkeypatch.setenv("PR_BODY", BODY)
+    monkeypatch.setattr(docs_link, "gh_merged", lambda n: n == 12)
+    assert docs_link.main() == 0
+    assert "::warning::" in capsys.readouterr().out
 
 
 def test_docs_link_check_passes_without_links():

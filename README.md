@@ -15,7 +15,7 @@ GitHub `cloud4-final/hybrid-docs`는 3거점 하이브리드 프로젝트의 팀
 1. 팀에 먼저 제안한다(회의, 채팅, PR 코멘트).
 2. 이 repo에 PR을 올린다. 작은 변경은 GitHub 웹에서 연필 아이콘으로 고쳐도 된다. 자기 AI에게 "hybrid-docs에 반영 PR 올려줘"라고 시켜도 된다.
 3. 팀원 1명이 승인하면 merge된다. 승인이 곧 합의 기록이다.
-4. 코드 PR 본문에 이 PR 링크를 적는다. 링크한 hybrid-docs PR이 merge되기 전에는 코드 PR의 `docs-link-check`가 실패한다.
+4. 코드 PR 본문에 이 PR 링크를 적는다. 링크한 hybrid-docs PR이 아직 merge되지 않았으면 `docs-link-check`가 경고로 알려준다.
 5. merge된 변경은 `confluence-sync`가 Confluence `0. 공통 기준` 사본을 갱신하고, 각 블록의 `source`에 적힌 기존 Confluence 문서(아키텍처, MVP 등)도 AI가 읽어 관련 문단을 최신화한다.
 
 ## 작성 규칙
